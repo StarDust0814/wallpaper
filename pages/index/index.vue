@@ -19,6 +19,17 @@
 			</view>
 			<view class="right"><uni-icons type="right" size="16" color="#333"></uni-icons></view>
 		</view>
+
+		<view class="select">
+			<common-title></common-title>
+			<view class="content">
+				<scroll-view scroll-x>
+					<view class="box" v-for="item in 8">
+						<image src="../../common/images/preview_small.webp" mode="aspectFill"></image>
+					</view>
+				</scroll-view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -84,6 +95,35 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
+		}
+	}
+
+	.select {
+		padding-top: 50rpx;
+		.content {
+			width: 720rpx;
+			margin-left: 30rpx;
+			margin-top: 30rpx;
+			scroll-view {
+				/* 设置不让其换行 */
+				white-space: nowrap;
+				.box {
+					width: 200rpx;
+					height: 430rpx;
+					/* 排布方式为横向排布 */
+					display: inline-block;
+					margin-right: 15rpx;
+					image {
+						width: 100%;
+						height: 100%;
+						border-radius: 10rpx;
+					}
+				}
+				/* 选择box中的最后一个元素，将其右边距改成和左边距一致的30rpx*/
+				.box:last-child {
+					margin-right: 30rpx;
+				}
+			}
 		}
 	}
 }
