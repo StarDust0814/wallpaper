@@ -48,6 +48,9 @@
 					<navigator url="" class="more">More+</navigator>
 				</template>
 			</common-title>
+			<view class="content">
+				<theme-item v-for="item in 8"></theme-item>
+			</view>
 		</view>
 	</view>
 </template>
@@ -159,6 +162,13 @@
 		.more {
 			color: #888;
 			font-size: 32rpx;
+		}
+		.content {
+			margin-top: 30rpx;
+			padding: 0 30rpx;
+			display: grid;
+			gap: 15rpx;
+			grid-template-columns: repeat(3, 1fr);
 		}
 	}
 }
