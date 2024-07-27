@@ -10,7 +10,7 @@
 
 		<view class="section">
 			<view class="list">
-				<view class="row">
+				<view class="row" @click="onNavigate">
 					<view class="left">
 						<uni-icons type="download-filled" size="20"></uni-icons>
 						<view class="text">我的下载</view>
@@ -20,7 +20,7 @@
 						<uni-icons type="right" size="15" color="#aaa"></uni-icons>
 					</view>
 				</view>
-				<view class="row">
+				<view class="row" @click="onNavigate">
 					<view class="left">
 						<uni-icons type="star-filled" size="20"></uni-icons>
 						<view class="text">我的评分</view>
@@ -81,6 +81,12 @@
 const clickContact = () => {
 	uni.makePhoneCall({
 		phoneNumber: '13876904583'
+	});
+};
+// 下载和评分跳转到详情页
+const onNavigate = () => {
+	uni.navigateTo({
+		url: '/pages/classlist/classlist'
 	});
 };
 </script>
