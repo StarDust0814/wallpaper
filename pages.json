@@ -25,11 +25,18 @@
 			}
 		},
 		{
-			"path" : "pages/classlist/classlist",
+			"path": "pages/classlist/classlist",
+			"style": {
+				"navigationBarTitleText": "classlist",
+				// 去除顶部标识
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path" : "pages/preview/preview",
 			"style" : 
 			{
-				"navigationBarTitleText" : "classlist\r
-		\t\t"
+				"navigationBarTitleText" : "preview"
 			}
 		}
 	],
