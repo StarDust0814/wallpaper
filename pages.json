@@ -33,10 +33,11 @@
 			}
 		},
 		{
-			"path" : "pages/preview/preview",
-			"style" : 
-			{
-				"navigationBarTitleText" : "preview"
+			"path": "pages/preview/preview",
+			"style": {
+				"navigationBarTitleText": "preview",
+				// 去除顶部标识
+				"navigationStyle": "custom"
 			}
 		}
 	],

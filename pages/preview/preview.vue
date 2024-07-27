@@ -15,7 +15,7 @@
 				<uni-dateformat :date="new Date()" format="MM月dd日"></uni-dateformat>
 			</view>
 			<view class="footer">
-				<view class="box">
+				<view class="box" @click="clickInfo">
 					<uni-icons type="info" size="28"></uni-icons>
 					<view class="text">信息</view>
 				</view>
@@ -29,12 +29,70 @@
 				</view>
 			</view>
 		</view>
+		<uni-popup ref="infoPopup" type="bottom">
+			<view class="infoPopup">
+				<view class="popHeader">
+					<view></view>
+					<view class="title">壁纸信息</view>
+					<view class="close" @click="clickInfoClose">
+						<uni-icons type="closeempty" size="18" color="#999"></uni-icons>
+					</view>
+				</view>
+				<scroll-view scroll-y>
+					<view class="content">
+						<view class="row">
+							<view class="label">壁纸ID：</view>
+							<text selectable class="value">12321312312312</text>
+						</view>
+						<view class="row">
+							<view class="label">分类：</view>
+							<text class="value class">明星美女</text>
+						</view>
+						<view class="row">
+							<view class="label">发布者：</view>
+							<text class="value">frank</text>
+						</view>
+						<view class="row">
+							<text class="label">评分：</text>
+							<view class="value rateBox">
+								<uni-rate readonly touchable value="3.5" size="16"></uni-rate>
+								<text class="score">5分</text>
+							</view>
+						</view>
+						<view class="row">
+							<text class="label">摘要：</text>
+							<view class="value">摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容</view>
+						</view>
+						<view class="row">
+							<text class="label">标签：</text>
+							<view class="value tabs">
+								<view class="tab" v-for="item in 3">标签名</view>
+							</view>
+						</view>
+						<view class="copyright">
+							声明：本图片来用户投稿，非商业使用，用于免费学习交流，如侵犯了您的权益，您可以拷贝壁纸ID举报至平台，邮箱876700669@qq.com，管理将删除侵权壁纸，维护您的权益。
+						</view>
+					</view>
+				</scroll-view>
+			</view>
+		</uni-popup>
 	</view>
 </template>
 
 <script setup>
-let maskState = ref(true);
-const maskChange = () => {};
+const maskState = ref(true);
+const infoPopup = ref(null);
+// 点击弹窗事件
+const clickInfo = () => {
+	infoPopup.value.open();
+};
+// 关闭弹窗事件
+const clickInfoClose = () => {
+	infoPopup.value.close();
+};
+const maskChange = () => {
+	maskState.value = !maskState.value;
+};
 </script>
 
 <style lang="scss" scoped>
@@ -104,6 +162,79 @@ const maskChange = () => {};
 				.text {
 					font-size: 26rpx;
 					color: $text-font-color-2;
+				}
+			}
+		}
+	}
+	.infoPopup {
+		background: #fff;
+		padding: 30rpx;
+		border-radius: 30rpx 30rpx 0 0;
+		overflow: hidden;
+		.popHeader {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			.title {
+				color: $text-font-color-2;
+				font-size: 26rpx;
+			}
+			.close {
+				padding: 6rpx;
+			}
+		}
+		scroll-view {
+			max-height: 60vh;
+			.content {
+				.row {
+					display: flex;
+					padding: 16rpx 0;
+					font-size: 32rpx;
+					line-height: 1.7em;
+					.label {
+						color: $text-font-color-2;
+						width: 140rpx;
+						text-align: right;
+						font-size: 30rpx;
+					}
+					.value {
+						flex: 1;
+						width: 0;
+					}
+					.rateBox {
+						display: flex;
+						align-items: center;
+						.score {
+							color: $text-font-color-2;
+							font-size: 26rpx;
+							padding-left: 10rpx;
+						}
+					}
+					.tabs {
+						display: flex;
+						flex-wrap: wrap;
+						.tab {
+							border: 1px solid $brand-theme-color;
+							color: $brand-theme-color;
+							font-size: 22rpx;
+							padding: 10rpx 30rpx;
+							border-radius: 40rpx;
+							line-height: 1em;
+							margin: 0 10rpx 10rpx 0;
+						}
+					}
+					.class {
+						color: $brand-theme-color;
+					}
+				}
+				.copyright {
+					font-size: 28rpx;
+					padding: 20rpx;
+					background: #f6f6f6;
+					color: #666;
+					border-radius: 10rpx;
+					margin: 20rpx 0;
+					line-height: 1.6em;
 				}
 			}
 		}
