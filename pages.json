@@ -27,9 +27,7 @@
 		{
 			"path": "pages/classlist/classlist",
 			"style": {
-				"navigationBarTitleText": "classlist",
-				// 去除顶部标识
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "分类列表"
 			}
 		},
 		{
@@ -38,6 +36,18 @@
 				"navigationBarTitleText": "preview",
 				// 去除顶部标识
 				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/notice/notice",
+			"style": {
+				"navigationBarTitleText": "公告"
+			}
+		},
+		{
+			"path": "pages/notice/detail",
+			"style": {
+				"navigationBarTitleText": "详情"
 			}
 		}
 	],

@@ -6,7 +6,9 @@
 			</swiper-item>
 		</swiper>
 		<view class="mask" v-if="maskState">
-			<view class="goBack"></view>
+			<view class="goBack" :style="{ top: getStatusBarHeight() + 'px' }" @click="goBack">
+				<uni-icons type="back" color="#fff" size="20"></uni-icons>
+			</view>
 			<view class="count">3 / 9</view>
 			<view class="time">
 				<uni-dateformat :date="new Date()" format="hh:ss"></uni-dateformat>
@@ -100,6 +102,7 @@
 </template>
 
 <script setup>
+import { getStatusBarHeight } from '@/utils/system.js';
 const maskState = ref(true);
 const infoPopup = ref(null);
 const scorePopup = ref(null);
@@ -126,8 +129,12 @@ const maskChange = () => {
 // 分数双向绑定
 const userScore = ref(0);
 // 分数提交
-
 const submitScore = () => {};
+
+// 蒙版返回按钮
+const goBack = () => {
+	uni.navigateBack();
+};
 </script>
 
 <style lang="scss" scoped>
@@ -155,6 +162,18 @@ const submitScore = () => {};
 			width: fit-content;
 		}
 		.goBack {
+			width: 38px;
+			height: 38px;
+			background: rgba(0, 0, 0, 0.5);
+			left: 30rpx;
+			margin-left: 0;
+			border-radius: 100rpx;
+			top: 0;
+			backdrop-filter: blur(10rpx);
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 		.count {
 			top: 10vh;
