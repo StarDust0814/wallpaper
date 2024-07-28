@@ -1,8 +1,8 @@
 <template>
 	<view class="layout">
 		<view class="navbar">
-			<view class="statusBar"></view>
-			<view class="titleBar">
+			<view class="statusBar" :style="{ height: statusBarHeight + 'px' }"></view>
+			<view class="titleBar" :style="{ height: titleBarHeight + 'px' }">
 				<view class="title">标题</view>
 				<view class="search">
 					<uni-icons type="search" size="18" color="#888"></uni-icons>
@@ -11,11 +11,18 @@
 			</view>
 		</view>
 
-		<view class="fill"></view>
+		<view class="fill" :style="{ height: statusBarHeight + titleBarHeight + 'px' }"></view>
 	</view>
 </template>
 
-<script setup></script>
+<script setup>
+let SYSTEM_INFO = uni.getSystemInfoSync();
+let statusBarHeight = ref(SYSTEM_INFO.statusBarHeight);
+
+let { top, height } = uni.getMenuButtonBoundingClientRect();
+// 计算胶囊按钮所占的高度
+let titleBarHeight = ref(height + (top - statusBarHeight.value) * 2);
+</script>
 
 <style lang="scss" scoped>
 .layout {
