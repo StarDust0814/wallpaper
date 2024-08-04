@@ -1,8 +1,8 @@
 <template>
 	<view class="preview">
 		<swiper circular :current="currentIndex" @change="swiperChange">
-			<swiper-item v-for="item in classList" :key="item._id">
-				<image @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
+			<swiper-item v-for="(item, index) in classList" :key="item._id">
+				<image v-if="readImgs.includes(index)" @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 		<view class="mask" v-if="maskState">
@@ -108,6 +108,8 @@ const infoPopup = ref(null);
 const scorePopup = ref(null);
 // 从预览图URL拼接大图URL
 const classList = ref([]);
+// 记录已经看过的图片，优化加载
+const readImgs = ref([]);
 
 const storageClass = uni.getStorageSync('storageClassList') || [];
 classList.value = storageClass.map((item) => {
@@ -123,11 +125,26 @@ const currentIndex = ref(0);
 onLoad((e) => {
 	currentId.value = e.id;
 	currentIndex.value = classList.value.findIndex((item) => item._id == e.id);
+	// 当前查看的图片索引
+	readImgsFunc();
 });
+
+// 只加载当前图片及前后两张图片
+function readImgsFunc() {
+	readImgs.value.push(
+		currentIndex.value <= 0 ? classList.value.length - 1 : currentIndex.value - 1,
+		currentIndex.value,
+		currentIndex.value >= classList.value.length - 1 ? 0 : currentIndex.value + 1
+	);
+	// 数组去重
+	readImgs.value = [...new Set(readImgs.value)];
+}
 
 // 预览左右滑动事件
 const swiperChange = (e) => {
 	currentIndex.value = e.detail.current;
+	// 当前查看的图片索引
+	readImgsFunc();
 };
 // 点击弹窗事件
 const clickInfo = () => {
