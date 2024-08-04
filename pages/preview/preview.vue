@@ -44,31 +44,31 @@
 					<view class="content">
 						<view class="row">
 							<view class="label">壁纸ID：</view>
-							<text selectable class="value">12321312312312</text>
+							<text selectable class="value">{{ currentId }}</text>
 						</view>
-						<view class="row">
+						<!-- <view class="row">
 							<view class="label">分类：</view>
 							<text class="value class">明星美女</text>
-						</view>
+						</view> -->
 						<view class="row">
 							<view class="label">发布者：</view>
-							<text class="value">frank</text>
+							<text class="value">{{ currentInfo.nickname }}</text>
 						</view>
 						<view class="row">
 							<text class="label">评分：</text>
 							<view class="value rateBox">
-								<uni-rate readonly touchable value="3.5" size="16"></uni-rate>
-								<text class="score">5分</text>
+								<uni-rate readonly touchable :value="currentInfo.score" size="16"></uni-rate>
+								<text class="score">{{ currentInfo.score }}分</text>
 							</view>
 						</view>
 						<view class="row">
 							<text class="label">摘要：</text>
-							<view class="value">摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容摘要文字填充内容</view>
+							<view class="value">{{ currentInfo.description }}</view>
 						</view>
 						<view class="row">
 							<text class="label">标签：</text>
 							<view class="value tabs">
-								<view class="tab" v-for="item in 3">标签名</view>
+								<view class="tab" v-for="tab in currentInfo.tabs">{{ tab }}</view>
 							</view>
 						</view>
 						<view class="copyright">
@@ -121,10 +121,12 @@ classList.value = storageClass.map((item) => {
 // 获取list传递的图片id
 const currentId = ref(null);
 const currentIndex = ref(0);
+const currentInfo = ref({});
 
 onLoad((e) => {
 	currentId.value = e.id;
 	currentIndex.value = classList.value.findIndex((item) => item._id == e.id);
+	currentInfo.value = classList.value[currentIndex.value];
 	// 当前查看的图片索引
 	readImgsFunc();
 });
@@ -143,6 +145,7 @@ function readImgsFunc() {
 // 预览左右滑动事件
 const swiperChange = (e) => {
 	currentIndex.value = e.detail.current;
+	currentInfo.value = classList.value[currentIndex.value];
 	// 当前查看的图片索引
 	readImgsFunc();
 };
