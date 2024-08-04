@@ -91,7 +91,6 @@ const classifyList = ref([]);
 const getClassify = async () => {
 	let res = await apiGetClassify({ select: true });
 	classifyList.value = res.data;
-	console.log(classifyList);
 };
 
 getBanner();
