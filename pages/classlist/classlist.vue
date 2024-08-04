@@ -44,6 +44,9 @@ const getClassList = async () => {
 	uni.setStorageSync('storageClassList', classList.value);
 };
 
+// 判断是否评过分
+const isScore = ref(false);
+
 onReachBottom(() => {
 	if (noData.value) return;
 	queryParams.pageNum++;

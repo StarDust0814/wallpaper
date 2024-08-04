@@ -23,7 +23,7 @@
 				</view>
 				<view class="box" @click="clickScore">
 					<uni-icons type="star" size="28"></uni-icons>
-					<view class="text">5分</view>
+					<view class="text">{{ currentInfo.score }}分</view>
 				</view>
 				<view class="box">
 					<uni-icons type="download" size="23"></uni-icons>
@@ -83,18 +83,18 @@
 			<view class="scorePopup">
 				<view class="popHeader">
 					<view></view>
-					<view class="title">壁纸评分</view>
+					<view class="title">{{ isScore ? '已评分~' : '壁纸评分' }}</view>
 					<view class="close" @click="clickScoreClose">
 						<uni-icons type="closeempty" size="18" color="#999"></uni-icons>
 					</view>
 				</view>
 				<view class="content">
-					<uni-rate v-model="userScore" allowHalf></uni-rate>
+					<uni-rate v-model="userScore" allowHalf :disabled="isScore" disabled-color="#FFCA3E"></uni-rate>
 					<text class="text">{{ userScore }}分</text>
 				</view>
 
 				<view class="footer">
-					<button @click="submitScore" :disabled="!userScore" type="default" size="mini" plain>确认评分</button>
+					<button @click="submitScore" :disabled="!userScore || isScore" type="default" size="mini" plain>确认评分</button>
 				</view>
 			</view>
 		</uni-popup>
@@ -122,6 +122,8 @@ classList.value = storageClass.map((item) => {
 const currentId = ref(null);
 const currentIndex = ref(0);
 const currentInfo = ref({});
+// 判断是否评过分
+const isScore = ref(false);
 
 onLoad((e) => {
 	currentId.value = e.id;
@@ -154,6 +156,10 @@ const clickInfo = () => {
 	infoPopup.value.open();
 };
 const clickScore = () => {
+	if (currentInfo.value.userScore) {
+		isScore.value = true;
+		userScore.value = currentInfo.value.userScore;
+	}
 	scorePopup.value.open();
 };
 // 关闭弹窗事件
@@ -163,6 +169,8 @@ const clickInfoClose = () => {
 
 const clickScoreClose = () => {
 	scorePopup.value.close();
+	userScore.value = 0;
+	isScore.value = false;
 };
 
 const maskChange = () => {
@@ -170,9 +178,31 @@ const maskChange = () => {
 };
 
 // 分数双向绑定
+import { apiGetSetupScore } from '@/api/apis.js';
 const userScore = ref(0);
 // 分数提交
-const submitScore = () => {};
+const submitScore = async () => {
+	uni.showLoading({
+		title: '加载中...'
+	});
+	let { classid, _id: wallId } = currentInfo.value;
+	let res = await apiGetSetupScore({
+		classid,
+		wallId,
+		userScore: userScore.value
+	});
+	uni.hideLoading();
+	if (res.errCode === 0) {
+		uni.showToast({
+			title: '评分成功',
+			icon: 'none'
+		});
+		// 同步数据源到浏览器缓存中，下一次打开评分可以初始化成用户自己打的分数
+		classList.value[currentIndex.value].userScore = userScore.value;
+		uni.setStorageSync('storageClassList', classList.value);
+		clickScoreClose();
+	}
+};
 
 // 蒙版返回按钮
 const goBack = () => {
