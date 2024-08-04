@@ -3,8 +3,8 @@
 		<custom-nav-bar title="推荐"></custom-nav-bar>
 		<view class="banner">
 			<swiper circular indicator-dots indicator-active-color="#fff" indicator-color="rgba(255,255,255,0.5)" autoplay>
-				<swiper-item v-for="item in 3">
-					<image src="../../common/images/banner1.jpg" mode="aspectFill"></image>
+				<swiper-item v-for="item in bannerList" :key="item._id">
+					<image :src="item.picurl" mode="aspectFill"></image>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -15,7 +15,9 @@
 			</view>
 			<view class="center">
 				<swiper vertical autoplay interval="1500" duration="300" circular>
-					<swiper-item v-for="item in 4"><navigator url="/pages/notice/detail">文字内容</navigator></swiper-item>
+					<swiper-item v-for="item in noticeList">
+						<navigator url="/pages/notice/detail">{{ item.title }}</navigator>
+					</swiper-item>
 				</swiper>
 			</view>
 			<view class="right"><uni-icons type="right" size="16" color="#333"></uni-icons></view>
@@ -35,8 +37,8 @@
 			</common-title>
 			<view class="content">
 				<scroll-view scroll-x>
-					<view class="box" v-for="item in 8" @click="goPreview">
-						<image src="../../common/images/preview_small.webp" mode="aspectFill"></image>
+					<view class="box" v-for="item in randomList" :key="item._id" @click="goPreview">
+						<image :src="item.smallPicurl" mode="aspectFill"></image>
 					</view>
 				</scroll-view>
 			</view>
@@ -63,6 +65,52 @@ const goPreview = () => {
 		url: '/pages/preview/preview'
 	});
 };
+// 顶部轮播图接口
+const bannerList = ref([]);
+const getBanner = async () => {
+	let res = await uni.request({
+		url: 'https://tea.qingnian8.com/api/bizhi/homeBanner',
+		header: {
+			'access-key': 'wallpaper'
+		}
+	});
+	if (res.data.errCode === 0) {
+		bannerList.value = res.data.data;
+	}
+};
+// 每日推荐接口
+const randomList = ref([]);
+const getDayRandom = async () => {
+	let res = await uni.request({
+		url: 'https://tea.qingnian8.com/api/bizhi/randomWall',
+		header: {
+			'access-key': 'wallpaper'
+		}
+	});
+	if (res.data.errCode === 0) {
+		randomList.value = res.data.data;
+	}
+};
+// 公告接口
+const noticeList = ref([]);
+const getNotice = async () => {
+	let res = await uni.request({
+		url: 'https://tea.qingnian8.com/api/bizhi/wallNewsList',
+		header: {
+			'access-key': 'wallpaper'
+		},
+		data: {
+			select: true
+		}
+	});
+	if (res.data.errCode === 0) {
+		noticeList.value = res.data.data;
+	}
+};
+
+getBanner();
+getDayRandom();
+getNotice();
 </script>
 
 <style lang="scss" scoped>
