@@ -52,7 +52,7 @@
 				</template>
 			</common-title>
 			<view class="content">
-				<theme-item v-for="item in 8"></theme-item>
+				<theme-item v-for="item in classifyList" :key="item._id" :item="item"></theme-item>
 				<theme-item :isMore="true"></theme-item>
 			</view>
 		</view>
@@ -65,7 +65,7 @@ const goPreview = () => {
 		url: '/pages/preview/preview'
 	});
 };
-import { apiGetBanner, apiDayRandom, apiGetNotice } from '@/api/apis.js';
+import { apiGetBanner, apiDayRandom, apiGetNotice, apiGetClassify } from '@/api/apis.js';
 // 顶部轮播图接口
 const bannerList = ref([]);
 const getBanner = async () => {
@@ -81,13 +81,23 @@ const getDayRandom = async () => {
 // 公告接口
 const noticeList = ref([]);
 const getNotice = async () => {
-	let res = await apiGetNotice();
+	let res = await apiGetNotice({
+		select: true
+	});
 	noticeList.value = res.data;
+};
+// 分类接口
+const classifyList = ref([]);
+const getClassify = async () => {
+	let res = await apiGetClassify({ select: true });
+	classifyList.value = res.data;
+	console.log(classifyList);
 };
 
 getBanner();
 getDayRandom();
 getNotice();
+getClassify();
 </script>
 
 <style lang="scss" scoped>

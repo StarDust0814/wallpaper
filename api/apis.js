@@ -15,11 +15,16 @@ export function apiDayRandom() {
 	});
 }
 
-export function apiGetNotice() {
+export function apiGetNotice(data = {}) {
 	return request({
 		url: "/wallNewsList",
-		data: {
-			select: true
-		}
+		data
+	})
+}
+
+export function apiGetClassify(data = {}) {
+	return request({
+		url: "/classify",
+		data
 	})
 }
