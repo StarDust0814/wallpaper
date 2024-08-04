@@ -10,8 +10,10 @@
 
 <script setup>
 import { apiGetClassList } from '@/api/apis.js';
+// 判断是否还有数据可以请求
+const noData = ref(false);
 // 从URL中获取分类的类别ID
-const queryParams = {};
+const queryParams = { pageSize: 12, pageNum: 1 };
 onLoad((e) => {
 	let { id = null, name = null } = e;
 	queryParams.classid = id;
@@ -24,8 +26,19 @@ onLoad((e) => {
 const classList = ref([]);
 const getClassList = async () => {
 	let res = await apiGetClassList(queryParams);
-	classList.value = res.data;
+
+	classList.value = [...classList.value, ...res.data];
+	// 如果没有新数据需要请求，进行标记
+	if (queryParams.pageSize > res.data.length) noData.value = true;
 };
+
+onReachBottom(() => {
+	if (noData.value) return;
+	queryParams.pageNum++;
+	getClassList();
+});
+
+// 触底加载新数据
 </script>
 
 <style lang="scss" scoped>
