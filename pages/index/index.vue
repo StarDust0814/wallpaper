@@ -65,47 +65,24 @@ const goPreview = () => {
 		url: '/pages/preview/preview'
 	});
 };
+import { apiGetBanner, apiDayRandom, apiGetNotice } from '@/api/apis.js';
 // 顶部轮播图接口
 const bannerList = ref([]);
 const getBanner = async () => {
-	let res = await uni.request({
-		url: 'https://tea.qingnian8.com/api/bizhi/homeBanner',
-		header: {
-			'access-key': 'wallpaper'
-		}
-	});
-	if (res.data.errCode === 0) {
-		bannerList.value = res.data.data;
-	}
+	let res = await apiGetBanner();
+	bannerList.value = res.data;
 };
 // 每日推荐接口
 const randomList = ref([]);
 const getDayRandom = async () => {
-	let res = await uni.request({
-		url: 'https://tea.qingnian8.com/api/bizhi/randomWall',
-		header: {
-			'access-key': 'wallpaper'
-		}
-	});
-	if (res.data.errCode === 0) {
-		randomList.value = res.data.data;
-	}
+	let res = await apiDayRandom();
+	randomList.value = res.data;
 };
 // 公告接口
 const noticeList = ref([]);
 const getNotice = async () => {
-	let res = await uni.request({
-		url: 'https://tea.qingnian8.com/api/bizhi/wallNewsList',
-		header: {
-			'access-key': 'wallpaper'
-		},
-		data: {
-			select: true
-		}
-	});
-	if (res.data.errCode === 0) {
-		noticeList.value = res.data.data;
-	}
+	let res = await apiGetNotice();
+	noticeList.value = res.data;
 };
 
 getBanner();
