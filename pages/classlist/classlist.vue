@@ -4,7 +4,7 @@
 			<uni-load-more status="loading"></uni-load-more>
 		</view>
 		<view class="content">
-			<navigator url="/pages/preview/preview" class="item" v-for="item in classList" :key="item._id">
+			<navigator :url="'/pages/preview/preview?id=' + item._id" class="item" v-for="item in classList" :key="item._id">
 				<image :src="item.smallPicurl" mode="aspectFill"></image>
 			</navigator>
 		</view>
@@ -12,6 +12,9 @@
 		<view class="loadingLayout" v-if="classList.length || noData">
 			<uni-load-more :status="noData ? 'noMore' : 'loading'"></uni-load-more>
 		</view>
+
+		<!--移动端防止底部按钮遮挡加载组件-->
+		<view class="safe-area-inset-bottom"></view>
 	</view>
 </template>
 
@@ -37,6 +40,8 @@ const getClassList = async () => {
 	classList.value = [...classList.value, ...res.data];
 	// 如果没有新数据需要请求，进行标记
 	if (queryParams.pageSize > res.data.length) noData.value = true;
+	// 缓存URL
+	uni.setStorageSync('storageClassList', classList.value);
 };
 
 onReachBottom(() => {

@@ -1,15 +1,15 @@
 <template>
 	<view class="preview">
-		<swiper circular>
-			<swiper-item v-for="item in 5">
-				<image @click="maskChange" src="../../common/images/preview1.jpg" mode="aspectFill"></image>
+		<swiper circular :current="currentIndex" @change="swiperChange">
+			<swiper-item v-for="item in classList" :key="item._id">
+				<image @click="maskChange" :src="item.picurl" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
 		<view class="mask" v-if="maskState">
 			<view class="goBack" :style="{ top: getStatusBarHeight() + 'px' }" @click="goBack">
 				<uni-icons type="back" color="#fff" size="20"></uni-icons>
 			</view>
-			<view class="count">3 / 9</view>
+			<view class="count">{{ currentIndex + 1 }} / {{ classList.length }}</view>
 			<view class="time">
 				<uni-dateformat :date="new Date()" format="hh:ss"></uni-dateformat>
 			</view>
@@ -106,6 +106,29 @@ import { getStatusBarHeight } from '@/utils/system.js';
 const maskState = ref(true);
 const infoPopup = ref(null);
 const scorePopup = ref(null);
+// 从预览图URL拼接大图URL
+const classList = ref([]);
+
+const storageClass = uni.getStorageSync('storageClassList') || [];
+classList.value = storageClass.map((item) => {
+	return {
+		...item,
+		picurl: item.smallPicurl.replace('_small.webp', '.jpg')
+	};
+});
+// 获取list传递的图片id
+const currentId = ref(null);
+const currentIndex = ref(0);
+
+onLoad((e) => {
+	currentId.value = e.id;
+	currentIndex.value = classList.value.findIndex((item) => item._id == e.id);
+});
+
+// 预览左右滑动事件
+const swiperChange = (e) => {
+	currentIndex.value = e.detail.current;
+};
 // 点击弹窗事件
 const clickInfo = () => {
 	infoPopup.value.open();

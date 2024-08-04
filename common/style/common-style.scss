@@ -12,3 +12,7 @@ swiper-item {
 .loadingLayout {
 	padding: 30rpx 0;
 }
+
+.safe-area-inset-bottom {
+	height: env(safe-area-inset-bottom);
+}
