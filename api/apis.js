@@ -28,3 +28,10 @@ export function apiGetClassify(data = {}) {
 		data
 	})
 }
+
+export function apiGetClassList(data = {}) {
+	return request({
+		url: "/wallList",
+		data
+	})
+}
