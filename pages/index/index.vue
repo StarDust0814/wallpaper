@@ -97,6 +97,19 @@ getBanner();
 getDayRandom();
 getNotice();
 getClassify();
+
+// 分享
+onShareAppMessage((e) => {
+	return {
+		title: '壁纸',
+		path: '/pages/index/index'
+	};
+});
+onShareTimeline(() => {
+	return {
+		title: '壁纸'
+	};
+});
 </script>
 
 <style lang="scss" scoped>

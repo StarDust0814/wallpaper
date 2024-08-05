@@ -1,5 +1,5 @@
 <template>
-	<view class="preview">
+	<view class="preview" v-if="currentInfo">
 		<swiper circular :current="currentIndex" @change="swiperChange">
 			<swiper-item v-for="(item, index) in classList" :key="item._id">
 				<image v-if="readImgs.includes(index)" @click="maskChange" :src="item.picurl" mode="aspectFill"></image>

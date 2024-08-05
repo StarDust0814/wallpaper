@@ -44,9 +44,6 @@ const getClassList = async () => {
 	uni.setStorageSync('storageClassList', classList.value);
 };
 
-// 判断是否评过分
-const isScore = ref(false);
-
 onReachBottom(() => {
 	if (noData.value) return;
 	queryParams.pageNum++;
@@ -54,6 +51,19 @@ onReachBottom(() => {
 });
 
 // 触底加载新数据
+
+// 分享
+onShareAppMessage((e) => {
+	return {
+		title: '壁纸',
+		path: '/pages/classify/classify'
+	};
+});
+onShareTimeline(() => {
+	return {
+		title: '壁纸'
+	};
+});
 </script>
 
 <style lang="scss" scoped>
