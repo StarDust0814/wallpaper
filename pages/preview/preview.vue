@@ -25,7 +25,7 @@
 					<uni-icons type="star" size="28"></uni-icons>
 					<view class="text">{{ currentInfo.score }}分</view>
 				</view>
-				<view class="box">
+				<view class="box" @click="clickDownload">
 					<uni-icons type="download" size="23"></uni-icons>
 					<view class="text">下载</view>
 				</view>
@@ -207,6 +207,29 @@ const submitScore = async () => {
 // 蒙版返回按钮
 const goBack = () => {
 	uni.navigateBack();
+};
+
+// 处理下载
+const clickDownload = () => {
+	// #ifdef H5
+	uni.showModal({
+		content: '请长按保存壁纸',
+		showCancel: false
+	});
+	// #endif
+	// #ifndef H5
+	uni.getImageInfo({
+		src: currentInfo.value.picurl,
+		success: (res) => {
+			uni.saveImageToPhotosAlbum({
+				filePath: res.path,
+				success: (res) => {
+					console.log(res);
+				}
+			});
+		}
+	});
+	// #endif
 };
 </script>
 
