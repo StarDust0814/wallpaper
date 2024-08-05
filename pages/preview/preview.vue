@@ -218,13 +218,56 @@ const clickDownload = () => {
 	});
 	// #endif
 	// #ifndef H5
+	uni.showLoading({
+		title: '下载中...',
+		mask: true
+	});
 	uni.getImageInfo({
 		src: currentInfo.value.picurl,
 		success: (res) => {
 			uni.saveImageToPhotosAlbum({
 				filePath: res.path,
 				success: (res) => {
-					console.log(res);
+					uni.showToast({
+						title: '保存成功',
+						icon: 'none'
+					});
+				},
+				fail: (err) => {
+					// 意外情况没有保存到图片
+					if (err.errMsg == 'saveImageToPhotosAlbum:fail cancel') {
+						uni.showToast({
+							title: '保存失败，请重新下载',
+							icon: 'none'
+						});
+						return;
+					}
+					uni.showModal({
+						title: '提示',
+						content: '需要授权保存相册',
+						success: (res) => {
+							if (res.confirm) {
+								uni.openSetting({
+									success: (setting) => {
+										if (setting.authSetting['scope.writePhotosAlbum']) {
+											uni.showToast({
+												title: '获取权限成功',
+												icon: 'none'
+											});
+										} else {
+											uni.showToast({
+												title: '获取权限失败',
+												icon: 'none'
+											});
+										}
+									}
+								});
+							}
+						}
+					});
+				},
+				complete: () => {
+					uni.hideLoading();
 				}
 			});
 		}
