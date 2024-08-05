@@ -15,6 +15,18 @@ const getClassify = async () => {
 	classifyList.value = res.data;
 };
 getClassify();
+// 分享
+onShareAppMessage((e) => {
+	return {
+		title: '壁纸',
+		path: '/pages/classify/classify'
+	};
+});
+onShareTimeline(() => {
+	return {
+		title: '壁纸'
+	};
+});
 </script>
 
 <style lang="scss" scoped>

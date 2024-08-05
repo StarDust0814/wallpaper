@@ -74,6 +74,7 @@
 						<view class="copyright">
 							声明：本图片来用户投稿，非商业使用，用于免费学习交流，如侵犯了您的权益，您可以拷贝壁纸ID举报至平台，邮箱876700669@qq.com，管理将删除侵权壁纸，维护您的权益。
 						</view>
+						<view class="safe-area-inset-bottom"></view>
 					</view>
 				</scroll-view>
 			</view>
@@ -103,6 +104,7 @@
 
 <script setup>
 import { getStatusBarHeight } from '@/utils/system.js';
+import { gotoHome } from '@/utils/common.js';
 const maskState = ref(true);
 const infoPopup = ref(null);
 const scorePopup = ref(null);
@@ -125,8 +127,18 @@ const currentInfo = ref({});
 // 判断是否评过分
 const isScore = ref(false);
 
-onLoad((e) => {
+onLoad(async (e) => {
 	currentId.value = e.id;
+	if (!e.id) gotoHome();
+	if (e.type == 'share') {
+		let res = await apiDetailWall({ id: currentId.value });
+		classList.value = res.data.map((item) => {
+			return {
+				...item,
+				picurl: item.smallPicurl.replace('_small.webp', '.jpg')
+			};
+		});
+	}
 	currentIndex.value = classList.value.findIndex((item) => item._id == e.id);
 	currentInfo.value = classList.value[currentIndex.value];
 	// 当前查看的图片索引
@@ -178,7 +190,7 @@ const maskChange = () => {
 };
 
 // 分数双向绑定
-import { apiGetSetupScore, apiWriteDownload } from '@/api/apis.js';
+import { apiGetSetupScore, apiWriteDownload, apiDetailWall } from '@/api/apis.js';
 const userScore = ref(0);
 // 分数提交
 const submitScore = async () => {
@@ -206,7 +218,14 @@ const submitScore = async () => {
 
 // 蒙版返回按钮
 const goBack = () => {
-	uni.navigateBack();
+	uni.navigateBack({
+		success: () => {},
+		fail: (err) => {
+			uni.reLaunch({
+				path: '/pages/index/index'
+			});
+		}
+	});
 };
 
 // 处理下载
@@ -285,6 +304,24 @@ const clickDownload = async () => {
 	}
 	// #endif
 };
+
+// 处理分享
+// 分享
+onShareAppMessage((e) => {
+	return {
+		title: '壁纸',
+		path: '/pages/preview/preview?id=' + currentId.value + '&type=share'
+	};
+});
+onShareTimeline(() => {
+	return {
+		title: '壁纸'
+	};
+});
+// 清理退出预览页面的缓存
+onUnload(() => {
+	uni.removeStorageSync('storageClassList');
+});
 </script>
 
 <style lang="scss" scoped>

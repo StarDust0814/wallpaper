@@ -64,6 +64,8 @@ const goPreview = () => {
 	uni.navigateTo({
 		url: '/pages/preview/preview'
 	});
+	// 缓存到浏览器本地（分享页跳转的数据源)
+	uni.setStorageSync('storageClassList', randomList.value);
 };
 import { apiGetBanner, apiDayRandom, apiGetNotice, apiGetClassify } from '@/api/apis.js';
 // 顶部轮播图接口

@@ -20,13 +20,17 @@
 
 <script setup>
 import { apiGetClassList } from '@/api/apis.js';
+import { gotoHome } from '@/utils/common.js';
 // 判断是否还有数据可以请求
 const noData = ref(false);
 // 从URL中获取分类的类别ID
 const queryParams = { pageSize: 12, pageNum: 1 };
+let pageName;
 onLoad((e) => {
 	let { id = null, name = null } = e;
+	if (!id) gotoHome();
 	queryParams.classid = id;
+	pageName = name;
 	uni.setNavigationBarTitle({
 		title: name
 	});
@@ -34,6 +38,7 @@ onLoad((e) => {
 	getClassList();
 });
 const classList = ref([]);
+
 const getClassList = async () => {
 	let res = await apiGetClassList(queryParams);
 
@@ -52,11 +57,11 @@ onReachBottom(() => {
 
 // 触底加载新数据
 
-// 分享
+// 分享需要携带参数
 onShareAppMessage((e) => {
 	return {
-		title: '壁纸',
-		path: '/pages/classify/classify'
+		title: '壁纸-' + pageName,
+		path: '/pages/classlist/classlist?id=' + queryParams.classid + '&name=' + pageName
 	};
 });
 onShareTimeline(() => {

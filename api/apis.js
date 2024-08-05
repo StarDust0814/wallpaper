@@ -49,3 +49,10 @@ export function apiWriteDownload(data = {}) {
 		data
 	})
 }
+
+export function apiDetailWall(data = {}) {
+	return request({
+		url: "/detailWall",
+		data
+	})
+}
