@@ -63,3 +63,10 @@ export function apiUserInfo(data = {}) {
 		data
 	})
 }
+
+export function apiGetHistoryList(data = {}) {
+	return request({
+		url: "/userWallList",
+		data
+	})
+}

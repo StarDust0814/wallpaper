@@ -11,7 +11,7 @@
 
 		<view class="section">
 			<view class="list">
-				<view class="row" @click="onNavigate">
+				<view class="row" @click="onNavigateToDownLoad">
 					<view class="left">
 						<uni-icons type="download-filled" size="20"></uni-icons>
 						<view class="text">我的下载</view>
@@ -21,7 +21,7 @@
 						<uni-icons type="right" size="15" color="#aaa"></uni-icons>
 					</view>
 				</view>
-				<view class="row" @click="onNavigate">
+				<view class="row" @click="onNavigateToScore">
 					<view class="left">
 						<uni-icons type="star-filled" size="20"></uni-icons>
 						<view class="text">我的评分</view>
@@ -77,7 +77,7 @@
 	</view>
 
 	<!--数据加载前的loading-->
-	<view class="loadingLayout">
+	<view class="loadingLayout" v-else>
 		<view :style="{ height: getNavBarHeight() + 'px' }"></view>
 		<uni-load-more status="loading"></uni-load-more>
 	</view>
@@ -101,11 +101,17 @@ const clickContact = () => {
 	});
 };
 // 下载和评分跳转到详情页
-const onNavigate = () => {
+const onNavigateToDownLoad = () => {
 	uni.navigateTo({
-		url: '/pages/classlist/classlist'
+		url: '/pages/classlist/classlist?name=我的下载&type=download'
 	});
 };
+const onNavigateToScore = () => {
+	uni.navigateTo({
+		url: '/pages/classlist/classlist?name=我的评分&type=score'
+	});
+};
+
 getUserInfo();
 </script>
 

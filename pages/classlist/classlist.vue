@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { apiGetClassList } from '@/api/apis.js';
+import { apiGetClassList, apiGetHistoryList } from '@/api/apis.js';
 import { gotoHome } from '@/utils/common.js';
 // 判断是否还有数据可以请求
 const noData = ref(false);
@@ -27,9 +27,11 @@ const noData = ref(false);
 const queryParams = { pageSize: 12, pageNum: 1 };
 let pageName;
 onLoad((e) => {
-	let { id = null, name = null } = e;
-	if (!id) gotoHome();
-	queryParams.classid = id;
+	let { id = null, name = null, type = null } = e;
+	if (type) queryParams.type = type;
+	if (id) queryParams.classid = id;
+	if (!id && !type) gotoHome();
+
 	pageName = name;
 	uni.setNavigationBarTitle({
 		title: name
@@ -40,7 +42,9 @@ onLoad((e) => {
 const classList = ref([]);
 
 const getClassList = async () => {
-	let res = await apiGetClassList(queryParams);
+	let res;
+	if (queryParams.classid) res = await apiGetClassList(queryParams);
+	if (queryParams.type) res = await apiGetHistoryList(queryParams);
 
 	classList.value = [...classList.value, ...res.data];
 	// 如果没有新数据需要请求，进行标记
@@ -68,6 +72,13 @@ onShareTimeline(() => {
 	return {
 		title: '壁纸'
 	};
+});
+// 下拉刷新
+onPullDownRefresh(() => {
+	getClassList();
+	setTimeout(() => {
+		uni.stopPullDownRefresh();
+	}, 1000);
 });
 </script>
 
