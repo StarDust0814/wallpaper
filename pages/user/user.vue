@@ -52,7 +52,7 @@
 		</view>
 		<view class="section">
 			<view class="list">
-				<view class="row">
+				<view class="row" @click="navigateToFollow">
 					<view class="left">
 						<uni-icons type="notification-filled" size="20"></uni-icons>
 						<view class="text">订阅更新</view>
@@ -62,7 +62,7 @@
 						<uni-icons type="right" size="15" color="#aaa"></uni-icons>
 					</view>
 				</view>
-				<view class="row">
+				<view class="row" @click="navigateToProblem">
 					<view class="left">
 						<uni-icons type="flag-filled" size="20"></uni-icons>
 						<view class="text">常见问题</view>
@@ -113,6 +113,18 @@ const onNavigateToScore = () => {
 };
 
 getUserInfo();
+
+const navigateToProblem = () => {
+	uni.navigateTo({
+		url: '/pages/notice/detail?id=6536358ce0ec19c8d67fbe82'
+	});
+};
+
+const navigateToFollow = () => {
+	uni.navigateTo({
+		url: '/pages/notice/detail?id=653507c6466d417a3718e94b'
+	});
+};
 </script>
 
 <style lang="scss" scoped>

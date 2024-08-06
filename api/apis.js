@@ -70,3 +70,10 @@ export function apiGetHistoryList(data = {}) {
 		data
 	})
 }
+
+export function apiNoticeDetail(data = {}) {
+	return request({
+		url: "/wallNewsDetail",
+		data
+	})
+}
