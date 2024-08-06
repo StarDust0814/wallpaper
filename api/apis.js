@@ -56,3 +56,10 @@ export function apiDetailWall(data = {}) {
 		data
 	})
 }
+
+export function apiUserInfo(data = {}) {
+	return request({
+		url: "/userInfo",
+		data
+	})
+}
