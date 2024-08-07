@@ -4,7 +4,12 @@
 		<view class="banner">
 			<swiper circular indicator-dots indicator-active-color="#fff" indicator-color="rgba(255,255,255,0.5)" autoplay>
 				<swiper-item v-for="item in bannerList" :key="item._id">
-					<image :src="item.picurl" mode="aspectFill"></image>
+					<navigator v-if="item.target == 'miniProgram'" :url="item.url" class="like" target="miniProgram" :app-id="item.appid">
+						<image :src="item.picurl" mode="aspectFill"></image>
+					</navigator>
+					<navigator v-else :url="`/pages/classlist/classlist?${item.url}`" class="like">
+						<image :src="item.picurl" mode="aspectFill"></image>
+					</navigator>
 				</swiper-item>
 			</swiper>
 		</view>
@@ -48,7 +53,7 @@
 			<common-title>
 				<template #name>专题精选</template>
 				<template #custom>
-					<navigator url="" class="more">More+</navigator>
+					<navigator url="/pages/classify/classify" open-type="reLaunch" class="more">More+</navigator>
 				</template>
 			</common-title>
 			<view class="content">
@@ -127,10 +132,14 @@ onShareTimeline(() => {
 				width: 100%;
 				height: 100%;
 				padding: 0 30rpx;
-				image {
+				.like {
 					width: 100%;
 					height: 100%;
-					border-radius: 10rpx;
+					image {
+						width: 100%;
+						height: 100%;
+						border-radius: 10rpx;
+					}
 				}
 			}
 		}
