@@ -70,19 +70,25 @@ const classList = ref([]);
 
 //点击搜索
 const onSearch = () => {
-	historySearch.value = [...new Set([queryParams.value.keyword, ...historySearch.value])];
+	uni.showLoading();
+	historySearch.value = [...new Set([queryParams.value.keyword, ...historySearch.value])].slice(0, 10);
 	uni.setStorageSync('historySearch', historySearch.value);
+	initParam(queryParams.value.keyword);
 	searchData();
 };
 
 const searchData = async () => {
-	let res = await apiSearchData(queryParams.value);
-	// 原本的数据和新加载的数据
-	classList.value = [...classList.value, ...res.data];
-	// 注意，预览也是用的缓存数据，因此也需要保存
-	uni.setStorageSync('storageClassList', classList.value);
-	if (queryParams.value.pageSize > res.data.length) noData.value = true;
-	if (res.data.length == 0 && classList.value.length == 0) noSearch.value = true;
+	try {
+		let res = await apiSearchData(queryParams.value);
+		// 原本的数据和新加载的数据
+		classList.value = [...classList.value, ...res.data];
+		// 注意，预览也是用的缓存数据，因此也需要保存
+		uni.setStorageSync('storageClassList', classList.value);
+		if (queryParams.value.pageSize > res.data.length) noData.value = true;
+		if (res.data.length == 0 && classList.value.length == 0) noSearch.value = true;
+	} finally {
+		uni.hideLoading();
+	}
 };
 
 //点击清除按钮
@@ -91,21 +97,21 @@ const onClear = () => {
 };
 
 // 清空状态
-const initParam = () => {
+const initParam = (value = '') => {
 	classList.value = [];
 	noData.value = false;
 	noSearch.value = false;
 	queryParams.value = {
 		pageNum: 1,
 		pageSize: 12,
-		keyword: ''
+		keyword: value || ''
 	};
 };
 
 //点击标签进行搜索
 const clickTab = (value) => {
-	initParam();
-	queryParams.value.keyword = value;
+	initParam(value);
+
 	onSearch();
 };
 
