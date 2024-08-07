@@ -77,3 +77,10 @@ export function apiNoticeDetail(data = {}) {
 		data
 	})
 }
+
+export function apiSearchData(data = {}) {
+	return request({
+		url: "/searchWall",
+		data
+	})
+}

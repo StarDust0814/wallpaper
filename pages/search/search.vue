@@ -4,7 +4,7 @@
 			<uni-search-bar @confirm="onSearch" @cancel="onClear" @clear="onClear" focus placeholder="搜索" v-model="queryParams.keyword"></uni-search-bar>
 		</view>
 
-		<view>
+		<view v-if="!classList.length || noSearch">
 			<view class="history" v-if="historySearch.length">
 				<view class="topTitle">
 					<view class="text">最近搜索</view>
@@ -27,17 +27,17 @@
 			</view>
 		</view>
 
-		<view class="noSearch">
+		<view class="noSearch" v-if="noSearch">
 			<uv-empty mode="search" icon="http://cdn.uviewui.com/uview/empty/search.png"></uv-empty>
 		</view>
 
-		<view>
+		<view v-else>
 			<view class="list">
-				<navigator :url="`/pages/preview/preview`" class="item" v-for="item in classList" :key="item._id">
+				<navigator :url="`/pages/preview/preview?id=${item._id}`" class="item" v-for="item in classList" :key="item._id">
 					<image :src="item.smallPicurl" mode="aspectFill"></image>
 				</navigator>
 			</view>
-			<view v-if="noData || classList.length"><uni-load-more :status="noData ? 'noMore' : 'loading'" /></view>
+			<view class="loadingLayout" v-if="noData || classList.length"><uni-load-more :status="noData ? 'noMore' : 'loading'" /></view>
 		</view>
 	</view>
 </template>
@@ -45,6 +45,7 @@
 <script setup>
 import { ref } from 'vue';
 import { onLoad, onUnload, onReachBottom } from '@dcloudio/uni-app';
+import { apiSearchData } from '../../api/apis';
 
 //查询参数
 const queryParams = ref({
@@ -65,19 +66,48 @@ const noData = ref(false);
 const noSearch = ref(false);
 
 //搜索结果列表
-const classList = ref([{ _id: 123123, smallPicurl: 'https://mp-0cb878b7-99ec-44ea-8246-12b123304b05.cdn.bspapp.com/xxmBizhi/20231102/1698905562410_0_small.webp' }]);
+const classList = ref([]);
 
 //点击搜索
 const onSearch = () => {
 	historySearch.value = [...new Set([queryParams.value.keyword, ...historySearch.value])];
 	uni.setStorageSync('historySearch', historySearch.value);
+	searchData();
+};
+
+const searchData = async () => {
+	let res = await apiSearchData(queryParams.value);
+	// 原本的数据和新加载的数据
+	classList.value = [...classList.value, ...res.data];
+	// 注意，预览也是用的缓存数据，因此也需要保存
+	uni.setStorageSync('storageClassList', classList.value);
+	if (queryParams.value.pageSize > res.data.length) noData.value = true;
+	if (res.data.length == 0 && classList.value.length == 0) noSearch.value = true;
 };
 
 //点击清除按钮
-const onClear = () => {};
+const onClear = () => {
+	initParam();
+};
+
+// 清空状态
+const initParam = () => {
+	classList.value = [];
+	noData.value = false;
+	noSearch.value = false;
+	queryParams.value = {
+		pageNum: 1,
+		pageSize: 12,
+		keyword: ''
+	};
+};
 
 //点击标签进行搜索
-const clickTab = (value) => {};
+const clickTab = (value) => {
+	initParam();
+	queryParams.value.keyword = value;
+	onSearch();
+};
 
 //点击清空搜索记录
 const removeHistory = () => {
@@ -93,10 +123,15 @@ const removeHistory = () => {
 };
 
 //触底加载更多
-onReachBottom(() => {});
+onReachBottom(() => {
+	queryParams.value.pageNum++;
+	searchData();
+});
 
 //关闭有页面
-onUnload(() => {});
+onUnload(() => {
+	uni.removeStorageSync('storageClassList');
+});
 </script>
 
 <style lang="scss" scoped>
